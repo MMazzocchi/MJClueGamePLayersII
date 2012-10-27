@@ -9,8 +9,13 @@ public class Player {
 	protected ArrayList<Card> cards;
 	protected int location;
 	protected Color color;
+	
+	public Player() {
+		cards = new ArrayList<Card>();
+	}
 
 	public void setCard(Card card){
+		Board.p("Added Card: "+ card);
 		cards.add(card);
 	}
 

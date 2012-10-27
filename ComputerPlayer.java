@@ -9,6 +9,10 @@ public class ComputerPlayer extends Player {
 	private ArrayList<Card> seen;
 	private String currentRoom;
 	
+	public ComputerPlayer() {
+		super();
+	}
+	
 	public Card suggestPerson() {
 		return null;
 	}

@@ -88,6 +88,7 @@ public class GameSetupTest {
 		Card pCard = green;
 		Assert.assertTrue(d.contains(pCard));
 		Card rCard = study;
+		
 		Assert.assertTrue(d.contains(rCard));
 		Card wCard = rope;
 		Assert.assertTrue(d.contains(wCard));

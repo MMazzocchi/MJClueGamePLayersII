@@ -36,4 +36,8 @@ public class Card {
 	public boolean equals(Card c) {
 		return ((c.getName().equals(name)) && (c.getType() == type));
 	}
+	
+	public String toString() {
+		return name +", " + type;
+	}
 }

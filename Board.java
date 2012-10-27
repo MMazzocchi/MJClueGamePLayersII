@@ -106,6 +106,7 @@ public class Board {
 
 		return newPlayers;
 	}
+	
 	public Card suggest(Card p, Card r, Card w) {
 		ArrayList<Player> tempPlayers = (ArrayList<Player>) totalPlayers.clone();
 		while (tempPlayers.size() > 0){
@@ -156,7 +157,9 @@ public class Board {
 		int arrayCounter = 0;
 		while (deck.size() > 0){
 			int index = randomGenerator.nextInt(deck.size());
+			Board.p("index: "+index+", deck.size(): "+deck.size());
 			Card item = deck.get(index);
+			p("Item: "+ item);
 			if (arrayCounter == totalPlayers.size())
 				arrayCounter = 0;
 			totalPlayers.get(arrayCounter).setCard(item);
@@ -180,12 +183,12 @@ public class Board {
 				String[] temp = line.split(delimiter);
 				Card c = null;
 				
-				if(temp.equals("W")) {
-					c = new Card(temp[1], Card.Type.WEAPON);
-				} else if(temp.equals("P")) {
-					c = new Card(temp[1], Card.Type.PERSON);
-				} else if(temp.equals("R")) {
-					c = new Card(temp[1], Card.Type.ROOM);
+				if(temp[0].trim().equals("W")) {
+					c = new Card(temp[1].trim(), Card.Type.WEAPON);
+				} else if(temp[0].trim().equals("P")) {
+					c = new Card(temp[1].trim(), Card.Type.PERSON);
+				} else if(temp[0].trim().equals("R")) {
+					c = new Card(temp[1].trim(), Card.Type.ROOM);
 				}
 				
 				newDeck.add(c);
