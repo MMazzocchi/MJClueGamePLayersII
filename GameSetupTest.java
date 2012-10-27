@@ -13,19 +13,19 @@ import org.junit.Test;
 
 public class GameSetupTest {
 	
-	Board b;
-	Card green;
-	Card white;
-	Card plum;
-	Card study;
-	Card rope;
-	Card kitchen;
-	Card knife;
+	public static Board b;
+	public static Card green;
+	public static Card white;
+	public static Card plum;
+	public static Card study;
+	public static Card rope;
+	public static Card kitchen;
+	public static Card knife;
 	
-	@Before public void init() {
+	@BeforeClass public static void initialize() {
 		//Initialize fields
 		b = new Board();
-		green = new Card("Mr.Green", Card.Type.PERSON);
+		green = new Card("Mr. Green", Card.Type.PERSON);
 		white = new Card("Mrs. White", Card.Type.PERSON);
 		plum = new Card("Prof. Plum", Card.Type.PERSON);
 		study = new Card("Study", Card.Type.ROOM);
@@ -34,26 +34,27 @@ public class GameSetupTest {
 		knife = new Card("Knife", Card.Type.WEAPON);
 	}
 	
-	@Test public void loadPeople() {
+	@Test public void loadPeople() {		
 		ArrayList<Player> cPlayers = b.getCompPlayers();
-		Player h = b.getHuman();
-		
+		HumanPlayer h = b.getHuman();
+						
 		//Test the human player
 		Assert.assertEquals("Mr. Green", h.getName());
 		Assert.assertEquals(Color.GREEN, h.getColor());
-		Assert.assertEquals(b.calcIndex(8, 0),h.getLocation());
+		Assert.assertEquals(276, h.getLocation());
 		
 		//Test Computer Player 1
 		Player c1 = cPlayers.get(0);
 		Assert.assertEquals("Mrs. White", c1.getName());
 		Assert.assertEquals(Color.WHITE, c1.getColor());
-		Assert.assertEquals(b.calcIndex(0, 4), c1.getLocation());
+		Assert.assertEquals(6, c1.getLocation());
 		
 		//Test Computer Player 2
 		Player c2 = cPlayers.get(cPlayers.size()-1);
 		Assert.assertEquals("Prof. Plum", c2.getName());
-		Assert.assertEquals(Color.MAGENTA, c2.getColor());
-		Assert.assertEquals(b.calcIndex(12, 0), c2.getLocation());
+		Assert.assertEquals(new Color(255,0,255), c2.getColor());
+		Assert.assertEquals(284, c2.getLocation());
+		
 	}
 	
 	@Test public void loadCards() {

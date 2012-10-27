@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -30,9 +31,12 @@ public class Board {
 	Card solPerson;
 	Card solRoom;
 	
+	Random randomGenerator = new Random();
+	ArrayList<Player> totalPlayers = new ArrayList<Player>();
+	
 	
 	public Board() {
-		
+				
 		this.cells = new ArrayList<BoardCell>();
 		this.rooms = new TreeMap<Character, String>();
 		this.adjMtx = new TreeMap<Integer, LinkedList<Integer>>();
@@ -42,13 +46,11 @@ public class Board {
 		calcAdjacencies();
 		
 		this.compPlayers = loadPlayers();
-		this.human = new HumanPlayer();
-		this.current = null;
 		this.deck = loadDeck();
 	}
 	
 	private ArrayList<Player> loadPlayers() {
-		ArrayList<Player> newDeck = new ArrayList<Player>();
+		ArrayList<Player> newPlayers = new ArrayList<Player>();
 
 		try {
 			calcNumCols();
@@ -56,14 +58,14 @@ public class Board {
 			Scanner in = new Scanner(reader);
 			String delimiter = ",";
 			int count = 0;
-			
+
 			while(in.hasNextLine()) {
 				String line = in.nextLine();
 				String[] temp = line.split(delimiter);
 				Player p = null;
 				Color c = null;
-				String cName = temp[1].toLowerCase();
-				
+				String cName = temp[1].toLowerCase().trim();
+
 				if(cName.equals("purple")) {
 					c = new Color(255,0,255);
 				} else if (cName.equals("green")) {
@@ -77,38 +79,90 @@ public class Board {
 				} else if (cName.equals("green")) {
 					c = Color.YELLOW;
 				}
-				
+
 				if(count==0) {
 					p = new HumanPlayer();
 				} else {
 					p = new ComputerPlayer();
 				}
-				
+
 				p.setName(temp[0]);
 				p.setColor(c);
-				p.setLocation(Integer.valueOf(temp[2]));
-				
-				newDeck.add(p);
+				p.setLocation(Integer.valueOf(temp[2].trim()));
+
+				if(count==0) {
+					this.human = (HumanPlayer)p;
+				} else {
+					newPlayers.add(p);
+				}
+
+				count++;
 			}
 			in.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("DeckInit.txt cannot be found. Please add DeckInit.txt to the list and try again.");
+			System.out.println("PlayerStats.txt cannot be found. Please add PlayerStats.txt to the list and try again.");
 		}
 
-		return newDeck;
+		return newPlayers;
 	}
-
 	public Card suggest(Card p, Card r, Card w) {
+		ArrayList<Player> tempPlayers = (ArrayList<Player>) totalPlayers.clone();
+		while (tempPlayers.size() > 0){
+			int index = randomGenerator.nextInt(totalPlayers.size());
+			Player player = tempPlayers.get(index);
+			if (player.getCards().contains(p) || player.getCards().contains(r) || player.getCards().contains(w)){
+				if (player.getCards().contains(p))
+					return p;
+				else if (player.getCards().contains(w))
+					return w;
+				else
+					return r;
+			}
+			tempPlayers.remove(index);
+		}
 		return null;
 	}
-	
 	public boolean accuse(Card p, Card r, Card w) {
+		if (p == getSolPerson() && r == getSolRoom() && w == getSolWeapon())
+			return true;
 		return false;
 	}
-	
 	public void deal() {
-		
+		boolean weapon = false, room = false, person = false;
+		// Setting the solutions
+		while (weapon == false && room == false && person == false){
+			int index = randomGenerator.nextInt(deck.size());
+			Card item = deck.get(index);
+			if (item.getType() == Card.Type.WEAPON && weapon == false){
+				setSolWeapon(item);
+				deck.remove(index);
+				weapon = true;
+			}
+			else if(item.getType() == Card.Type.PERSON && person == false){
+				setSolPerson(item);
+				deck.remove(index);
+				person = true;
+			}
+			else if(item.getType() == Card.Type.ROOM && room == false){
+				setSolRoom(item);
+				deck.remove(index);
+				room = true;
+			}
+		}
+		// Dealing the cards, yo!
+		totalPlayers.addAll(compPlayers); // making an arrayList of all the players (thought it would be easier to cycle through players this way)
+		totalPlayers.add(human);
+		int arrayCounter = 0;
+		while (deck.size() > 0){
+			int index = randomGenerator.nextInt(deck.size());
+			Card item = deck.get(index);
+			if (arrayCounter == totalPlayers.size())
+				arrayCounter = 0;
+			totalPlayers.get(arrayCounter).setCard(item);
+			deck.remove(index);
+			arrayCounter++;
+		}	   
 	}
 	
 	public ArrayList<Card> loadDeck() {
@@ -427,5 +481,9 @@ public class Board {
 
 	public void setCurrent(Player current) {
 		this.current = current;
+	}
+	
+	public static void p(Object o) {
+		System.out.println(o);
 	}
 }

@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Player {
-	
+
 	protected String name;
 	protected ArrayList<Card> cards;
 	protected int location;
 	protected Color color;
-	
+
+	public void setCard(Card card){
+		cards.add(card);
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -33,6 +37,9 @@ public class Player {
 	}
 	public void setColor(Color color) {
 		this.color = color;
+	}
+	public String toString() {
+		return name;
 	}
 
 }
