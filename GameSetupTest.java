@@ -152,7 +152,7 @@ public class GameSetupTest {
 		Assert.assertFalse(b.accuse(pCard, rCard, wCard2));
 		
 		//Test all wrong accusation
-		Assert.assertTrue(b.accuse(pCard2, rCard2, wCard2));
+		Assert.assertFalse(b.accuse(pCard2, rCard2, wCard2));
 	}
 	
 	@Test public void targetLocationTest() {
@@ -232,20 +232,26 @@ public class GameSetupTest {
 		Card wCard = rope;
 		cards.add(wCard);
 		c.setCards(cards);
+		c.setName("KERFAIL");
 		p.add(c);
 		b.setCompPlayers(p);
+		b.setHuman(null);
 		
 		//Test a suggestion with a known person
 		Card x = b.suggest(pCard, kitchen, knife);
+		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(pCard));
 		//Test a suggestion with a known room
 		x = b.suggest(white, rCard, knife);
+		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(rCard));
 		//Test a suggestion with a known weapon
 		x = b.suggest(white, kitchen, wCard);
+		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(wCard));
 		//Test a suggestion with no known cards
 		x = b.suggest(white, kitchen, knife);
+		Board.p("Returned card: "+x);
 		Assert.assertTrue(x == null);
 		
 		//Test that a random card is returned if there are multiple knowns

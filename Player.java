@@ -15,7 +15,6 @@ public class Player {
 	}
 
 	public void setCard(Card card){
-		Board.p("Added Card: "+ card);
 		cards.add(card);
 	}
 

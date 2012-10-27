@@ -108,17 +108,29 @@ public class Board {
 	}
 	
 	public Card suggest(Card p, Card r, Card w) {
-		ArrayList<Player> tempPlayers = (ArrayList<Player>) totalPlayers.clone();
+		ArrayList<Player> tempPlayers = (ArrayList<Player>) compPlayers.clone();
+		if(human!=null) tempPlayers.add(human);
+		
+		p("Temp: "+tempPlayers);
 		while (tempPlayers.size() > 0){
-			int index = randomGenerator.nextInt(totalPlayers.size());
+			int index = randomGenerator.nextInt(tempPlayers.size());
 			Player player = tempPlayers.get(index);
+			if(player==current) {
+				tempPlayers.remove(index);
+				continue;
+			}
 			if (player.getCards().contains(p) || player.getCards().contains(r) || player.getCards().contains(w)){
+				ArrayList<Card> rc = new ArrayList<Card>();
+				rc.clear();
 				if (player.getCards().contains(p))
-					return p;
-				else if (player.getCards().contains(w))
-					return w;
-				else
-					return r;
+					rc.add(p);
+				if (player.getCards().contains(w))
+					rc.add(w);
+				if (player.getCards().contains(r))
+					rc.add(r);
+				int rcIndex = randomGenerator.nextInt(rc.size());
+				return rc.get(rcIndex);
+					
 			}
 			tempPlayers.remove(index);
 		}
@@ -157,9 +169,7 @@ public class Board {
 		int arrayCounter = 0;
 		while (deck.size() > 0){
 			int index = randomGenerator.nextInt(deck.size());
-			Board.p("index: "+index+", deck.size(): "+deck.size());
 			Card item = deck.get(index);
-			p("Item: "+ item);
 			if (arrayCounter == totalPlayers.size())
 				arrayCounter = 0;
 			totalPlayers.get(arrayCounter).setCard(item);
