@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -40,12 +41,64 @@ public class Board {
 		loadConfigFiles();
 		calcAdjacencies();
 		
-		this.compPlayers = new ArrayList<Player>();
+		this.compPlayers = loadPlayers();
 		this.human = new HumanPlayer();
 		this.current = null;
 		this.deck = loadDeck();
 	}
 	
+	private ArrayList<Player> loadPlayers() {
+		ArrayList<Player> newDeck = new ArrayList<Player>();
+
+		try {
+			calcNumCols();
+			FileReader reader = new FileReader("PlayerStats.txt");
+			Scanner in = new Scanner(reader);
+			String delimiter = ",";
+			int count = 0;
+			
+			while(in.hasNextLine()) {
+				String line = in.nextLine();
+				String[] temp = line.split(delimiter);
+				Player p = null;
+				Color c = null;
+				String cName = temp[1].toLowerCase();
+				
+				if(cName.equals("purple")) {
+					c = new Color(255,0,255);
+				} else if (cName.equals("green")) {
+					c = Color.GREEN;
+				} else if (cName.equals("red")) {
+					c = Color.RED;
+				} else if (cName.equals("blue")) {
+					c = Color.BLUE;
+				} else if (cName.equals("white")) {
+					c = Color.WHITE;
+				} else if (cName.equals("green")) {
+					c = Color.YELLOW;
+				}
+				
+				if(count==0) {
+					p = new HumanPlayer();
+				} else {
+					p = new ComputerPlayer();
+				}
+				
+				p.setName(temp[0]);
+				p.setColor(c);
+				p.setLocation(Integer.valueOf(temp[2]));
+				
+				newDeck.add(p);
+			}
+			in.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("DeckInit.txt cannot be found. Please add DeckInit.txt to the list and try again.");
+		}
+
+		return newDeck;
+	}
+
 	public Card suggest(Card p, Card r, Card w) {
 		return null;
 	}
@@ -59,7 +112,37 @@ public class Board {
 	}
 	
 	public ArrayList<Card> loadDeck() {
-		return null;
+		
+		ArrayList<Card> newDeck = new ArrayList<Card>();
+		
+		try {
+			calcNumCols();
+			FileReader reader = new FileReader("DeckInit.txt");
+			Scanner in = new Scanner(reader);
+			String delimiter = ",";
+			
+			while(in.hasNextLine()) {
+				String line = in.nextLine();
+				String[] temp = line.split(delimiter);
+				Card c = null;
+				
+				if(temp.equals("W")) {
+					c = new Card(temp[1], Card.Type.WEAPON);
+				} else if(temp.equals("P")) {
+					c = new Card(temp[1], Card.Type.PERSON);
+				} else if(temp.equals("R")) {
+					c = new Card(temp[1], Card.Type.ROOM);
+				}
+				
+				newDeck.add(c);
+			}
+			in.close();
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("DeckInit.txt cannot be found. Please add DeckInit.txt to the list and try again.");
+		}
+		
+		return newDeck;
 	}
 
 	public void loadConfigFiles() {
