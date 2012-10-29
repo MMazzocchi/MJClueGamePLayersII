@@ -11,17 +11,42 @@ public class ComputerPlayer extends Player {
 	
 	public ComputerPlayer() {
 		super();
+		seen = new ArrayList<Card>();
+	}
+	
+	public ComputerPlayer(ArrayList<Card> d) {
+		super(d);
+		seen = new ArrayList<Card>();
+	}
+
+	public void setCard(Card card) {
+		super.setCard(card);
+		setSeenCard(card);
+	}
+	
+	
+	public void setSeenCard(Card card) {
+		seen.add(card);
 	}
 	
 	public Card suggestPerson() {
+		for(Card card:deck) {
+			if (card.getType() == Card.Type.PERSON && seen.contains(card) == false)
+				return card;
+		}
 		return null;
 	}
 	
 	public Card suggestRoom() {
-		return null;
+		Card c = new Card(currentRoom, Card.Type.ROOM);
+		return c;
 	}
 	
 	public Card suggestWeapon() {
+		for(Card card:deck) {
+			if (card.getType() == Card.Type.WEAPON && seen.contains(card) == false)
+				return card;
+		}
 		return null;
 	}
 	

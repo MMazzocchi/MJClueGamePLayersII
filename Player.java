@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Player {
-
+	
+	protected ArrayList<Card> deck;
 	protected String name;
 	protected ArrayList<Card> cards;
 	protected int location;
@@ -12,6 +13,11 @@ public class Player {
 	
 	public Player() {
 		cards = new ArrayList<Card>();
+	}
+	
+	public Player(ArrayList<Card> d) {
+		cards = new ArrayList<Card>();
+		deck = d;
 	}
 
 	public void setCard(Card card){

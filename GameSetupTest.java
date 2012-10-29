@@ -160,8 +160,6 @@ public class GameSetupTest {
 
 		//Test that a room will always be selected if possible
 		b.calcTargets(b.calcIndex(4, 4), 1);
-		Board.p("Targets: "+b.getTargets());
-		Board.p(b.getCellAt(b.calcIndex(4,3)).isDoorway());
 		for(int i=0; i<100; i++) {
 			BoardCell selection = p.pickLocation(b.getTargets());
 			if(!selection.equals(b.getCellAt(b.calcIndex(4,3)))) {
@@ -198,7 +196,6 @@ public class GameSetupTest {
 		l1 = 0;
 		l2 = 0;
 		l3 = 0;
-		Board.p("Targets: "+b.getTargets());
 		p.setLastRoom('C');
 		for(int i=0; i<100; i++) {
 			//Ensure that a valid space is chosen
@@ -345,9 +342,12 @@ public class GameSetupTest {
 	}
 	
 	@Test public void ComputerSuggestion() {
-		ComputerPlayer c = new ComputerPlayer();
-		c.setCurrentRoom("Study");
+		ArrayList<Card> deck = b.loadDeck();
 		
+		
+		ComputerPlayer c = new ComputerPlayer(deck);
+		c.setCurrentRoom("Study");
+				
 		Card rCard = study;
 		Card pCard = green;
 		Card wCard = rope;
@@ -360,9 +360,10 @@ public class GameSetupTest {
 		ArrayList<Card> d = b.loadDeck();
 		d.remove(pCard);
 		d.remove(wCard);
-		
+				
 		//Give the computer player every card in the deck besides one person and one weapon
 		c.setCards(d);
+		c.setSeen(d);
 		
 		//Ensure that those missing cards are suggested
 		x = c.suggestPerson();

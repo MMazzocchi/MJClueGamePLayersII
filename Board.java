@@ -81,9 +81,9 @@ public class Board {
 				}
 
 				if(count==0) {
-					p = new HumanPlayer();
+					p = new HumanPlayer(deck);
 				} else {
-					p = new ComputerPlayer();
+					p = new ComputerPlayer(deck);
 				}
 
 				p.setName(temp[0]);
@@ -495,7 +495,4 @@ public class Board {
 		this.current = current;
 	}
 	
-	public static void p(Object o) {
-		System.out.println(o);
-	}
 }
