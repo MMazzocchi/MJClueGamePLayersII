@@ -111,7 +111,6 @@ public class Board {
 		ArrayList<Player> tempPlayers = (ArrayList<Player>) compPlayers.clone();
 		if(human!=null) tempPlayers.add(human);
 		
-		p("Temp: "+tempPlayers);
 		while (tempPlayers.size() > 0){
 			int index = randomGenerator.nextInt(tempPlayers.size());
 			Player player = tempPlayers.get(index);

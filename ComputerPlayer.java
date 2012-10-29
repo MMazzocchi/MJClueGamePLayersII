@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class ComputerPlayer extends Player {
 	
-	private String lastRoom;
+	private char lastRoom;
 	private ArrayList<Card> seen;
 	private String currentRoom;
 	
@@ -26,14 +26,26 @@ public class ComputerPlayer extends Player {
 	}
 	
 	public BoardCell pickLocation(Set<BoardCell> targets) {
-		return null;
+		for(BoardCell b : targets) {
+		//	Board.p("Cell "+b+" is doorway: "+b.isDoorway());
+			if(b.isDoorway() && ((RoomCell)b).getInitial()!=lastRoom) {
+				return b;
+			}
+		}
+		
+		Object[] bc = targets.toArray();
+		
+		int i = (int)(Math.random()*bc.length);
+		
+		BoardCell b = (BoardCell)bc[i];
+		return b;
 	}
 
-	public String getLastRoom() {
+	public char getLastRoom() {
 		return lastRoom;
 	}
 
-	public void setLastRoom(String lastRoom) {
+	public void setLastRoom(char lastRoom) {
 		this.lastRoom = lastRoom;
 	}
 

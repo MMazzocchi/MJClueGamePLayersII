@@ -159,7 +159,9 @@ public class GameSetupTest {
 		ComputerPlayer p = new ComputerPlayer();
 
 		//Test that a room will always be selected if possible
-		b.calcTargets(b.calcIndex(5, 3), 1);
+		b.calcTargets(b.calcIndex(4, 4), 1);
+		Board.p("Targets: "+b.getTargets());
+		Board.p(b.getCellAt(b.calcIndex(4,3)).isDoorway());
 		for(int i=0; i<100; i++) {
 			BoardCell selection = p.pickLocation(b.getTargets());
 			if(!selection.equals(b.getCellAt(b.calcIndex(4,3)))) {
@@ -192,22 +194,21 @@ public class GameSetupTest {
 		Assert.assertTrue(l3>1);
 		
 		//Test that a target will be selected randomly if a room is available but that room has already been entered.
-		b.calcTargets(b.calcIndex(5, 3), 1);
+		b.calcTargets(b.calcIndex(4, 4), 1);
 		l1 = 0;
 		l2 = 0;
 		l3 = 0;
-		int l4 = 0;
+		Board.p("Targets: "+b.getTargets());
+		p.setLastRoom('C');
 		for(int i=0; i<100; i++) {
 			//Ensure that a valid space is chosen
 			BoardCell selection = p.pickLocation(b.getTargets());
 			if(selection.equals(b.getCellAt(b.calcIndex(4,3)))) {
 				l1++;
-			} else if(selection.equals(b.getCellAt(b.calcIndex(6,3)))) {
+			} else if(selection.equals(b.getCellAt(b.calcIndex(4,5)))) {
 				l2++;
-			} else if(selection.equals(b.getCellAt(b.calcIndex(5,2)))) {
-				l3++;
 			} else if(selection.equals(b.getCellAt(b.calcIndex(5,4)))) {
-				l4++;
+				l3++;
 			} else {
 				fail("Cell with coordinates row: "+selection.row+", col: "+selection.col +" selected.");
 			}
@@ -217,8 +218,8 @@ public class GameSetupTest {
 		Assert.assertTrue(l1>1);
 		Assert.assertTrue(l2>1);
 		Assert.assertTrue(l3>1);
-		Assert.assertTrue(l4>1);
 	}
+
 	
 	@Test public void suggestionTest() {
 		//Initialize a computer player
@@ -239,19 +240,15 @@ public class GameSetupTest {
 		
 		//Test a suggestion with a known person
 		Card x = b.suggest(pCard, kitchen, knife);
-		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(pCard));
 		//Test a suggestion with a known room
 		x = b.suggest(white, rCard, knife);
-		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(rCard));
 		//Test a suggestion with a known weapon
 		x = b.suggest(white, kitchen, wCard);
-		Board.p("Returned card: "+x);
 		Assert.assertTrue(x.equals(wCard));
 		//Test a suggestion with no known cards
 		x = b.suggest(white, kitchen, knife);
-		Board.p("Returned card: "+x);
 		Assert.assertTrue(x == null);
 		
 		//Test that a random card is returned if there are multiple knowns
